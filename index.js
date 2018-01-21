@@ -10,6 +10,7 @@ const SASS_FILE_MATCHER = /\.s[ac]ss$/;
 const SASS_MODULE_FILE_MATCHER = /\.module\.s[ac]ss$/;
 
 const DEFAULT_OPTIONS = deepFreeze({
+  sass: false,
   loaderOptions: {
     modules: true,
     localIdentName: '[local]___[hash:base64:5]'
@@ -154,16 +155,19 @@ module.exports = (config, env, options = {}) => {
       cssModulesRuleCssLoader.options, overriddenOptions.loaderOptions);
   addBeforeRule(config.module.rules, fileLoaderMatcher, cssModulesRule);
 
-  sassRule.test = SASS_FILE_MATCHER;
-  sassRule.exclude = SASS_MODULE_FILE_MATCHER;
-  addAfterRule(sassRule, postcssLoaderMatcher, require.resolve('sass-loader'));
-  addBeforeRule(config.module.rules, fileLoaderMatcher, sassRule);
+  if (overriddenOptions.sass) {
+    sassRule.test = SASS_FILE_MATCHER;
+    sassRule.exclude = SASS_MODULE_FILE_MATCHER;
+    addAfterRule(sassRule, postcssLoaderMatcher,
+        require.resolve('sass-loader'));
+    addBeforeRule(config.module.rules, fileLoaderMatcher, sassRule);
 
-  const sassModulesRule = cloneDeep(cssModulesRule);
-  sassModulesRule.test = SASS_MODULE_FILE_MATCHER;
-  addAfterRule(sassModulesRule, postcssLoaderMatcher,
-      require.resolve('sass-loader'));
-  addBeforeRule(config.module.rules, fileLoaderMatcher, sassModulesRule);
+    const sassModulesRule = cloneDeep(cssModulesRule);
+    sassModulesRule.test = SASS_MODULE_FILE_MATCHER;
+    addAfterRule(sassModulesRule, postcssLoaderMatcher,
+        require.resolve('sass-loader'));
+    addBeforeRule(config.module.rules, fileLoaderMatcher, sassModulesRule);
+  }
 
   return config;
 };
