@@ -1,7 +1,6 @@
 const subject = require('./index')
 
 describe('CSS Modules rewire', () => {
-
     const mockDevelopmentConfig = {
         module: {
             rules: [

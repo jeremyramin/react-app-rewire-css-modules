@@ -7,6 +7,8 @@
   },
   "devDependencies": {
     "jest": "^21.2.1",
+    "react-scripts": "1.1.0",
+    "react-app-rewired": "^1.4.0",
     "sass-loader": "^6.0.6"
   },
   "dependencies": {
@@ -14,6 +16,7 @@
   },
   "peerDependencies": {
     "node-sass": "^4.5.3",
-    "sass-loader": "^6.0.6"
+    "sass-loader": "^6.0.6",
+    "react-app-rewired": "^1.4.0"
   }
 }
