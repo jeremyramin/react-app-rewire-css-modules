@@ -1,5 +1,7 @@
 'use strict';
 const cloneDeep = require('lodash.clonedeep');
+const defaultsDeep = require('lodash.defaultsDeep');
+
 const { loaderNameMatches } = require('react-app-rewired');
 const deepFreeze = require('./deepFreeze');
 
@@ -141,7 +143,7 @@ const postcssLoaderMatcher = createLoaderMatcher('postcss-loader');
 const fileLoaderMatcher = createLoaderMatcher('file-loader');
 
 module.exports = (config, env, options = {}) => {
-  const overriddenOptions = Object.assign({}, DEFAULT_OPTIONS, options);
+  const overriddenOptions = defaultsDeep({}, options, DEFAULT_OPTIONS);
 
   const cssRule = findRule(config.module.rules, cssRuleMatcher);
   const sassRule = cloneDeep(cssRule);

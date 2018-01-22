@@ -12,7 +12,8 @@
     "sass-loader": "^6.0.6"
   },
   "dependencies": {
-    "lodash.clonedeep": "^4.5.0"
+    "lodash.clonedeep": "^4.5.0",
+    "lodash.defaultsdeep": "^4.6.0"
   },
   "peerDependencies": {
     "node-sass": "^4.5.3",
