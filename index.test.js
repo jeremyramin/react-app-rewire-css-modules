@@ -1,117 +1,16 @@
-const subject = require('./index');
+'use strict';
+const inject = require('./index');
+const cloneDeep = require('lodash.clonedeep');
+
+const mockDevelopmentConfig = require('./mock/development.config');
+const mockProductionConfig = require('./mock/production.config');
 
 describe('CSS Modules rewire', () => {
-  const mockDevelopmentConfig = {
-    module: {
-      rules: [
-        {
-          test: /\.(js|jsx|mjs)$/,
-          enforce: 'pre',
-          use: [
-            {options: {}, loader: '/path/to/eslint-loader/index.js'}
-          ],
-          include: '/path/to/src'
-        },
-        {
-          oneOf: [
-            {
-              test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
-              loader: '/path/to/url-loader/index.js',
-              options: {},
-            },
-            {
-              test: /\.(js|jsx|mjs)$/,
-              include: '/path/to/src',
-              loader: '/path/to/babel-loader/lib/index.js',
-              options: {},
-            },
-            {
-              test: /\.css$/,
-              use: [
-                '/path/to/style-loader/index.js',
-                {
-                  loader: '/path/to/css-loader/index.js',
-                  options: {importLoaders: 1},
-                },
-                {
-                  loader: '/path/to/postcss-loader/lib/index.js',
-                  options: {},
-                },
-              ],
-            },
-            {
-              exclude: [/\.js$/, /\.html$/, /\.json$/],
-              loader: '/path/to/file-loader/dist/cjs.js',
-              options: {name: 'static/media/[name].[hash:8].[ext]'},
-            },
-          ]
-        }]
-    }
-  };
-
-  const mockProductionConfig = {
-    module: {
-      rules: [
-        {
-          test: /\.(js|jsx|mjs)$/,
-          enforce: 'pre',
-          use: [
-            {options: {}, loader: '/path/to/eslint-loader/index.js'}
-          ],
-          include: '/path/to/src'
-        },
-        {
-          oneOf: [
-            {
-              test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
-              loader: '/path/to/url-loader/index.js',
-              options: {},
-            },
-            {
-              test: /\.(js|jsx|mjs)$/,
-              include: '/path/to/src',
-              loader: '/path/to/babel-loader/lib/index.js',
-              options: {},
-            },
-            {
-              test: /\.css$/,
-              loader: [
-                {
-                  loader: '/path/to/extract-text-webpack-plugin/dist/loader.js',
-                  options: {}
-                },
-                {
-                  loader: '/path/to/style-loader/index.js',
-                  options: {}
-                },
-                {
-                  loader: '/path/to/css-loader/index.js',
-                  options: {
-                    importLoaders: 1,
-                    minimize: true,
-                    sourceMap: true
-                  }
-                },
-                {
-                  loader: '/path/to/postcss-loader/lib/index.js',
-                  options: {}
-                }
-              ]
-            },
-            {
-              exclude: [/\.js$/, /\.html$/, /\.json$/],
-              loader: '/path/to/file-loader/dist/cjs.js',
-              options: {name: 'static/media/[name].[hash:8].[ext]'},
-            },
-          ]
-        }]
-    }
-  };
-
   describe('CSS loaders', () => {
     describe('development', () => {
+      const config = cloneDeep(mockDevelopmentConfig);
+      const result = inject(config);
 
-      const result = subject(mockDevelopmentConfig);
       const cssLoader = result.module.rules[1].oneOf[2];
       const cssModulesLoader = result.module.rules[1].oneOf[3];
 
@@ -136,8 +35,9 @@ describe('CSS Modules rewire', () => {
     });
 
     describe('production', () => {
+      const config = cloneDeep(mockProductionConfig);
+      const result = inject(config);
 
-      const result = subject(mockProductionConfig);
       const cssLoader = result.module.rules[1].oneOf[2];
       const cssModulesLoader = result.module.rules[1].oneOf[3];
 
@@ -168,8 +68,9 @@ describe('CSS Modules rewire', () => {
 
   describe('SASS loaders', () => {
     describe('development', () => {
+      const config = cloneDeep(mockDevelopmentConfig);
+      const result = inject(config, null, {sass: true});
 
-      const result = subject(mockDevelopmentConfig);
       const cssLoader = result.module.rules[1].oneOf[2];
       const cssModulesLoader = result.module.rules[1].oneOf[3];
       const sassLoader = result.module.rules[1].oneOf[4];
@@ -203,7 +104,9 @@ describe('CSS Modules rewire', () => {
     });
 
     describe('production', () => {
-      const result = subject(mockProductionConfig);
+      const config = cloneDeep(mockProductionConfig);
+      const result = inject(config, null, {sass: true});
+
       const cssLoader = result.module.rules[1].oneOf[2];
       const cssModulesLoader = result.module.rules[1].oneOf[3];
       const sassLoader = result.module.rules[1].oneOf[4];
