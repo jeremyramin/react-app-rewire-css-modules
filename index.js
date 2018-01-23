@@ -1,6 +1,6 @@
 'use strict';
 const cloneDeep = require('lodash.clonedeep');
-const defaultsDeep = require('lodash.defaultsDeep');
+const defaultsDeep = require('lodash.defaultsdeep');
 
 const { loaderNameMatches } = require('react-app-rewired');
 const deepFreeze = require('./deepFreeze');
